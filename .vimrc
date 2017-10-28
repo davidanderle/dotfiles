@@ -176,18 +176,10 @@ set colorcolumn=80
 
 nnoremap q <C-v>
 
-set clipboard=unnamed
-
 "copy between vims copy to buffer
-vmap <C-c> :w! ~/.vimbuffer<CR>
-nmap <C-v> :.w! ~/.vimbuffer<CR>
+vmap <C-c> :w! ~/.vimbuffer \| !cat ~/.vimbuffer \| clip.exe <CR><CR>
 " paste from buffer
 map <C-v> :r ~/.vimbuffer<CR>
-
-vnoremap ty "+y
-vnoremap tY "+Y
-vnoremap tp "+p
-vnoremap tP "+P
 
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
