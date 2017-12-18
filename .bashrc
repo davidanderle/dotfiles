@@ -141,9 +141,11 @@ fi
 
 export MY_HOME=/mnt/c/Users/ander
 alias cdc='cd $OLDPWD'
-alias hpce='cd $MY_HOME/Desktop/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw3-ad4414'
-alias programming='cd $MY_HOME/Desktop/things/Imperial_stuff/Programming'
+alias hpce='cd /mnt/c/Users/ander/OneDrive/ICL/OneDrive\ -\ Imperial\ College\ London/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD'
+alias fyp='cd /mnt/c/Users/ander/OneDrive/ICL/OneDrive\ -\ Imperial\ College\ London/things/Imperial_stuff/Year_4/FYP/software'
+alias programming='cd /mnt/c/Users/ander/OneDrive/ICL/OneDrive\ -\ Imperial\ College\ London/things/Imperial_stuff/Programming'
 alias home='cd $MY_HOME'
+alias vim='nvim'
 
 PROMPT_COMMAND='echo -ne "\033]0;\007"'
 
