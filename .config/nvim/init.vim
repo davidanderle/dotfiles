@@ -144,6 +144,11 @@ map <leader>ss :setlocal spell!<CR>
 "Map source ~/.vimrc to ,vimrc (load .vimrc)
 "map <leader>vimrc :source ~/.vimrc<CR>
 
+"highlight the 81th char in the row
+"call matchadd('ColorColumn', '\%81v.', 100)
+highlight ColorColumn ctermbg=234
+set colorcolumn=80
+
 "Enable folding (hide lines)
 set foldenable
 set foldlevelstart=10
@@ -162,23 +167,16 @@ map <silent><leader>// mxBi//<esc>`xll
 "Set line uncomments to ,.. in normal mode
 map <silent><leader>.. mxBxx`xhh
 
-map <leader>: mx@='Bi//<lt><esc>j'`xll
-
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
 inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-"highlight the 81th char in the row
-highlight ColorColumn ctermbg=234
-"call matchadd('ColorColumn', '\%81v.', 100)
-set colorcolumn=80
-
 nnoremap q <C-v>
 
 "copy between vims copy to buffer
-vmap <C-c> :w! ~/.vimbuffer \| !cat ~/.vimbuffer \| clip.exe <CR><CR>
+vmap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
 " paste from buffer
 map <C-v> :r ~/.vimbuffer<CR>
 
@@ -193,3 +191,57 @@ set title
 "Disable 'upper' status bar in nvim
 set laststatus=0
 map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
+set fillchars+=vert:\|
+set fillchars+=stlnc:-
+set fillchars+=stl:-
+
+"Echoes the current function being edited to the status line
+function! WhatFunctionAreWeIn()
+  let strList = ["while", "foreach", "ifelse", "if else", "for", "if", "else", "try", "catch", "case", "switch"]
+  let foundcontrol = 1
+  let position = ""
+  let pos=getpos(".")          " This saves the cursor position
+  let view=winsaveview()       " This saves the window view
+  while (foundcontrol)
+    let foundcontrol = 0
+    normal [{
+    call search('\S','bW')
+    let tempchar = getline(".")[col(".") - 1]
+    if (match(tempchar, ")") >=0 )
+      normal %
+      call search('\S','bW')
+    endif
+    let tempstring = getline(".")
+    for item in strList
+      if( match(tempstring,item) >= 0 )
+        let position = item . " - " . position
+        let foundcontrol = 1
+        break
+      endif
+    endfor
+    if(foundcontrol == 0)
+      call cursor(pos)
+      call winrestview(view)
+      return tempstring.position
+    endif
+  endwhile
+  call cursor(pos)
+  call winrestview(view)
+  return tempstring.position
+endfunction
+map \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
+
+" Search for word under cursor and replace with given text for files in arglist.
+"<leader>r rWord (:Replace rWord), to replace all with confirmation
+":Replace! rWord, to replace all without confirmation
+function! Replace(bang, replace)
+  let flag = 'ge'
+  if !a:bang
+    let flag .= 'c'
+  endif
+  let search = '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
+  let replace = escape(a:replace, '/\&~')
+  execute 'argdo %s/' . search . '/' . replace . '/' . flag
+endfunction
+command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
+nnoremap <Leader>r :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
