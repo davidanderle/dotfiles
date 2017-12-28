@@ -185,12 +185,7 @@ autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
 set title
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"						     NVIM UI					      "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Disable 'upper' status bar in nvim
-set laststatus=0
-map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
+" Set window split delimeters
 set fillchars+=vert:\|
 set fillchars+=stlnc:-
 set fillchars+=stl:-
@@ -245,3 +240,45 @@ function! Replace(bang, replace)
 endfunction
 command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
 nnoremap <Leader>r :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
+
+" Map ctrl-w to close vim tabs
+map <C-w> :tabclose<CR>
+
+" Map ctrl-t to new tab
+map <C-t> :tabnew .<CR>
+
+" Map shift-j to prev tab (like vimium)
+map <S-j> :tabprevious<CR>
+" Map shift-k to prev tab (like vimium)
+map <S-k> :tabnext<CR>
+
+" Map Shift-t to restore 1 recently closed tab (assuming no split)
+let g:reopenbuf = expand('%:p')
+function! ReopenLastTabLeave()
+  let g:lastbuf = expand('%:p')
+  let g:lasttabcount = tabpagenr('$')
+endfunction
+function! ReopenLastTabEnter()
+  if tabpagenr('$') < g:lasttabcount
+    let g:reopenbuf = g:lastbuf
+  endif
+endfunction
+function! ReopenLastTab()
+  tabnew
+  execute 'buffer' . g:reopenbuf
+endfunction
+augroup ReopenLastTab
+  autocmd!
+  autocmd TabLeave * call ReopenLastTabLeave()
+  autocmd TabEnter * call ReopenLastTabEnter()
+augroup END
+nnoremap <S-t> :call ReopenLastTab()<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"						     NVIM UI					      "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map ,vimrc to nvimrc load
+map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
+
+"Disable 'upper' status bar in nvim
+set laststatus=0
