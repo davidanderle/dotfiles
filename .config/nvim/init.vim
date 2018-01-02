@@ -146,7 +146,7 @@ map <leader>ss :setlocal spell!<CR>
 
 "highlight the 81th char in the row
 "call matchadd('ColorColumn', '\%81v.', 100)
-highlight ColorColumn ctermbg=234
+"highlight ColorColumn ctermbg=234 "Excluded due to bug
 set colorcolumn=80
 
 "Enable folding (hide lines)
