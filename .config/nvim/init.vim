@@ -24,6 +24,12 @@ set showcmd
 "Set to auto read when a file is changed from outside
 set autoread
 
+"Enable filetype filtering
+filetype on
+
+"Enable syntax highlight
+syntax on
+
 "Enable filetype plugins
 filetype plugin on
 filetype indent on
@@ -163,9 +169,13 @@ set foldmethod=indent
 "Turn off comment completition upon new line from a commented line
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 "Set line comments to ,// in normal mode
-map <silent><leader>// mxBi//<esc>`xll
+autocmd FileType c,h,cpp,hpp map <silent><leader>// myBi//<esc>`yll
+autocmd FileType vim map <silent><leader>// myBi"<esc><del>`yll
+autocmd FileType sh map <silent><leader>// myBi#<esc><del>`yll
 "Set line uncomments to ,.. in normal mode
-map <silent><leader>.. mxBxx`xhh
+autocmd FileType c,h,cpp,hpp map <silent><leader>.. myBxx`yhh
+autocmd FileType vim map <silent><leader>.. myBx`yhh
+autocmd FileType sh map <silent><leader>.. myBx`yhh
 
 nnoremap <Tab> >>
 nnoremap <S-Tab> <<
@@ -224,7 +234,7 @@ function! WhatFunctionAreWeIn()
   call winrestview(view)
   return tempstring.position
 endfunction
-map \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
+autocmd FileType c,h,cpp,hpp,java,jav map \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
 
 " Search for word under cursor and replace with given text for files in arglist.
 "<leader>r rWord (:Replace rWord), to replace all with confirmation
@@ -241,8 +251,8 @@ endfunction
 command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
 nnoremap <Leader>r :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
 
-" Map ctrl-w to close vim tabs
-map <C-w> :tabclose<CR>
+" Map ctrl-x to close vim tabs
+map <C-x> :tabclose<CR>
 
 " Map ctrl-t to new tab
 map <C-t> :tabnew .<CR>
@@ -273,6 +283,8 @@ augroup ReopenLastTab
   autocmd TabEnter * call ReopenLastTabEnter()
 augroup END
 nnoremap <S-t> :call ReopenLastTab()<CR>
+
+nnoremap <leader>save :mksession! 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "						     NVIM UI					      "
