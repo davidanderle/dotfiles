@@ -140,6 +140,12 @@ set expandtab
 
 "Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
+"Turn on spellcheck in Latex documents
+autocmd FileType tex,bib setlocal spell!
+"Specify a personal dictionary. Use zg on the word to add it to the dict.
+set spellfile=~/.config/nvim/en.utf-8.add
+"Set default spell check language
+set spelllang=en
 
 "Map source ~/.vimrc to ,vimrc (load .vimrc)
 "map <leader>vimrc :source ~/.vimrc<CR>
@@ -278,8 +284,8 @@ augroup ReopenLastTab
 augroup END
 nnoremap <S-t> :call ReopenLastTab()<CR>
 
+" Save the current vim session to a file, using ,save
 nnoremap <leader>save :mksession! 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     NVIM UI        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
