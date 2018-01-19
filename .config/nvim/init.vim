@@ -146,6 +146,8 @@ autocmd FileType tex,bib setlocal spell!
 set spellfile=~/.config/nvim/en.utf-8.add
 "Set default spell check language
 set spelllang=en
+"Set textwidth to 80 char for automatic formatting. Highlight and gq
+autocmd FileType tex,bib set textwidth=80
 
 "Map source ~/.vimrc to ,vimrc (load .vimrc)
 "map <leader>vimrc :source ~/.vimrc<CR>
