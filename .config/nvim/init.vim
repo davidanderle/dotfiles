@@ -32,7 +32,10 @@ syntax on
 
 "Enable filetype plugins
 filetype plugin on
+"Enable filetype based indentaion
 filetype indent on
+"Disable indentaion when using latex
+autocmd FileType tex,bib setl noai nocin nosi inde=
 
 "Turn on Wild Menu
 set wildmenu
@@ -294,6 +297,7 @@ nnoremap <leader>save :mksession!
 " Map ,vimrc to nvimrc load
 if has('nvim')
     map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
+    tnoremap <Esc> <C-\><C-n>
 else
     map <leader>vimrc :source ~/.vimrc<CR>
 endif
