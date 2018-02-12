@@ -1,4 +1,27 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"        						     NVIM UI        					       "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map ,vimrc to nvimrc load
+if has('nvim')
+    map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
+    tnoremap <Esc> <C-\><C-n>
+else
+    map <leader>vimrc :source ~/.vimrc<CR>
+endif
+
+"Disable 'upper' status bar in nvim
+set laststatus=0
+set diffopt+=vertical
+
+" Plugin manager plugin for nvim: https://github.com/junegunn/vim-plug
+call plug#begin('~/.local/share/nvim/plugs')
+" Fuzzy search: https://github.com/junegunn/fzf.vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+call plug#end()
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Enable autoread when file is changed externally (after 1s of 
@@ -37,6 +60,9 @@ filetype indent on
 "Disable indentaion when using latex
 autocmd FileType tex,bib setl noai nocin nosi inde=
 
+" Set scripts to be executable from the shell
+au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endi
+
 "Turn on Wild Menu
 set wildmenu
 
@@ -49,6 +75,27 @@ set noerrorbells
 
 "Height of the command bar
 set cmdheight=1
+
+"Move to the beginning of line with Shift-B
+nnoremap B ^
+nnoremap $ <nop>
+vnoremap B ^
+vnoremap $ <nop>
+"Move to the end of a line with Shift-E
+nnoremap E $
+nnoremap ^ <nop>
+vnoremap E $
+vnoremap ^ <nop>
+"Delete line from the right of the cursor till the end
+nnoremap dE d$
+nnoremap d$ <nop>
+vnoremap dE d$
+vnoremap d$ <nop>
+"Delete line from the left of the cursor till the beginning
+nnoremap dB d^
+nnoremap d^ <nop>
+vnoremap dB d^
+vnoremap d^ <nop>
 
 "Bracket auto-completition
 inoremap '      ''<Left>
@@ -78,6 +125,9 @@ inoremap {{     {
 inoremap }}     }
 inoremap {}     {}<Left>
 
+autocmd FileType tex,bib inoremap $      $$<Left>
+autocmd FileType tex,bib inoremap $$     $
+
 "Unbind arrow keys in normal mode
 map <up> <nop>
 map <down> <nop>
@@ -89,27 +139,6 @@ nnoremap ; :
 
 "VIM key leader is set ','
 let mapleader=","
-
-"Move to the beginning of line with Shift-B
-nnoremap B ^
-nnoremap $ <nop>
-vnoremap B ^
-vnoremap $ <nop>
-"Move to the end of a line with Shift-E
-nnoremap E $
-nnoremap ^ <nop>
-vnoremap E $
-vnoremap ^ <nop>
-"Delete line from the right of the cursor till the end
-nnoremap dE d$
-nnoremap d$ <nop>
-vnoremap dE d$
-vnoremap d$ <nop>
-"Delete line from the left of the cursor till the beginning
-nnoremap dB d^
-nnoremap d^ <nop>
-vnoremap dB d^
-vnoremap d^ <nop>
 
 "Show matching brackets when text indicator is over them
 set showmatch
@@ -151,6 +180,7 @@ set spellfile=~/.config/nvim/en.utf-8.add
 set spelllang=en
 "Set textwidth to 80 char for automatic formatting. Highlight and gq
 autocmd FileType tex,bib set textwidth=80
+"zG ignores mispell once, z= suggests possible corrections
 
 "Map source ~/.vimrc to ,vimrc (load .vimrc)
 "map <leader>vimrc :source ~/.vimrc<CR>
@@ -166,7 +196,7 @@ set foldlevelstart=10
 "Max nested folding is 5
 set foldnestmax=5
 "Fold based on indentation
-set foldmethod=indent
+set foldmethod=marker
 
 "Turn off comment completition upon new line from a commented line
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -291,19 +321,10 @@ nnoremap <S-t> :call ReopenLastTab()<CR>
 
 " Save the current vim session to a file, using ,save
 nnoremap <leader>save :mksession! 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"        						     NVIM UI        					       "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map ,vimrc to nvimrc load
-if has('nvim')
-    map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
-    tnoremap <Esc> <C-\><C-n>
-else
-    map <leader>vimrc :source ~/.vimrc<CR>
-endif
 
-"Disable 'upper' status bar in nvim
-set laststatus=0
+" Put \begin{} \end{} tags tags around the current word
+autocmd FileType tex,bib map  <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
+autocmd FileType tex,bib map! <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						    USEFUL CMDS        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -315,7 +336,11 @@ set laststatus=0
 "ciw: Chage inner word
 "cw: Changes word right to the cursor
 
+"di{, di(, di[: delete inner text inside a {}, () or [] bracket, and remain norm.
+"ci{, ci(, ci[: delete inner text inside.. and go to insert mode.
+
 ",save filename.vim: saves the current vim session to a file
 ":so filename.vim: loads a saved vim
 
 "gg=G: corrects the indentations in the whole file
+"vipgq": format paragraph
