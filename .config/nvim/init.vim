@@ -20,6 +20,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
@@ -57,8 +58,6 @@ syntax on
 filetype plugin on
 "Enable filetype based indentaion
 filetype indent on
-"Disable indentaion when using latex
-autocmd FileType tex,bib setl noai nocin nosi inde=
 
 " Set scripts to be executable from the shell
 au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endi
@@ -78,55 +77,52 @@ set cmdheight=1
 
 "Move to the beginning of line with Shift-B
 nnoremap B ^
-nnoremap $ <nop>
 vnoremap B ^
-vnoremap $ <nop>
 "Move to the end of a line with Shift-E
 nnoremap E $
-nnoremap ^ <nop>
 vnoremap E $
-vnoremap ^ <nop>
 "Delete line from the right of the cursor till the end
 nnoremap dE d$
-nnoremap d$ <nop>
 vnoremap dE d$
-vnoremap d$ <nop>
 "Delete line from the left of the cursor till the beginning
 nnoremap dB d^
-nnoremap d^ <nop>
 vnoremap dB d^
-vnoremap d^ <nop>
 
 "Bracket auto-completition
-inoremap '      ''<Left>
-inoremap '<CR>  '<CR>'<Esc>O
-inoremap ''     '
+"inoremap '      ''<Left>
+"inoremap '<CR>  '<CR>'<Esc>O
+"inoremap ''     '
+"
+"inoremap "      ""<Left>
+"inoremap "<CR>  "<CR>"<Esc>O
+"inoremap ""     "
 
-inoremap "      ""<Left>
-inoremap "<CR>  "<CR>"<Esc>O
-inoremap ""     "
+"inoremap (      ()<Left>
+"inoremap (<CR>  (<CR>)<Esc>O
+"inoremap ((     (
+"inoremap ))     )
+"inoremap ()     ()
+"
+"inoremap [      []<Left>
+"inoremap [<CR>  [<CR>]<Esc>O
+"inoremap [[     [
+"inoremap ]]     ]
+"inoremap []     []
 
-inoremap (      ()<Left>
-inoremap (<CR>  (<CR>)<Esc>O
-inoremap ((     (
-inoremap ))     )
-inoremap ()     ()
-
-inoremap [      []<Left>
-inoremap [<CR>  [<CR>]<Esc>O
-inoremap [[     [
-inoremap ]]     ]
-inoremap []     []
-
-inoremap {      {}<Left>
+"inoremap {      {}<Left>
 autocmd FileType jav,java inoremap {<CR>  {<CR>}<Esc>O
 autocmd FileType c,h,cpp,hpp,cs inoremap {<CR>  <Esc>o{<CR>}<Esc>O
-inoremap {{     {
-inoremap }}     }
-inoremap {}     {}<Left>
+"inoremap {{     {
+"inoremap }}     }
+"inoremap {}     {}<Left>
 
-autocmd FileType tex,bib inoremap $      $$<Left>
-autocmd FileType tex,bib inoremap $$     $
+" Delete surrounding parentheses
+nnoremap <leader>x) zdi(va(p`z
+nnoremap <leader>x] mzdi[va[p`z
+nnoremap <leader>x} mzdi{va{p`z
+nnoremap <leader>x( mzdi(va(p`z
+nnoremap <leader>x[ mzdi[va[p`z
+nnoremap <leader>x{ mzdi{va{p`z
 
 "Unbind arrow keys in normal mode
 map <up> <nop>
@@ -134,11 +130,15 @@ map <down> <nop>
 map <left> <nop>
 map <right> <nop>
 
+"map f search repetitions forward and backward
+nnoremap <leader>n ;
+nnoremap <leader>, ,
+
 "map ; to : in normal mode (saves key strikes)
 nnoremap ; :
 
-"VIM key leader is set ','
-let mapleader=","
+"VIM key leader is set space
+let mapleader=" "
 
 "Show matching brackets when text indicator is over them
 set showmatch
@@ -158,9 +158,6 @@ colorscheme noctu
 "Highlight search results (using /something)
 set hlsearch
 
-"Turn off search highlighting when not used pressing Ctrl-l
-nnoremap <silent><C-l> :nohlsearch<CR>
-
 "Incremental search (search during typing)
 set incsearch
 
@@ -172,15 +169,6 @@ set expandtab
 
 "Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
-"Turn on spellcheck in Latex documents
-autocmd FileType tex,bib setlocal spell!
-"Specify a personal dictionary. Use zg on the word to add it to the dict.
-set spellfile=~/.config/nvim/en.utf-8.add
-"Set default spell check language
-set spelllang=en
-"Set textwidth to 80 char for automatic formatting. Highlight and gq
-autocmd FileType tex,bib set textwidth=80
-"zG ignores mispell once, z= suggests possible corrections
 
 "Map source ~/.vimrc to ,vimrc (load .vimrc)
 "map <leader>vimrc :source ~/.vimrc<CR>
@@ -321,13 +309,33 @@ nnoremap <S-t> :call ReopenLastTab()<CR>
 
 " Save the current vim session to a file, using ,save
 nnoremap <leader>save :mksession! 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"        						     LATEX           					       "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Auto-close $ mathmode
+autocmd FileType tex,bib inoremap $      $$<Left>
+autocmd FileType tex,bib inoremap $$     $
 
 " Put \begin{} \end{} tags tags around the current word
 autocmd FileType tex,bib map  <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
 autocmd FileType tex,bib map! <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
+
+"Disable indentaion when using latex
+autocmd FileType tex,bib setl noai nocin nosi inde=
+
+"Turn on spellcheck in Latex documents
+autocmd FileType tex,bib setlocal spell!
+"Specify a personal dictionary. Use zg on the word to add it to the dict.
+set spellfile=~/.config/nvim/en.utf-8.add
+"Set default spell check language
+set spelllang=en
+"Set textwidth to 80 char for automatic formatting. Highlight and gq
+autocmd FileType tex,bib set textwidth=80
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						    USEFUL CMDS        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"zG ignores mispell once, z= suggests possible corrections
+
 "rdaw: Delete a word (stays in norm)
 "diw: Delete inner word
 "dw: Delete word right to the cursor

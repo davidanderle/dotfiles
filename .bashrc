@@ -147,7 +147,7 @@ alias photos.exe='~/.photos.sh'
 alias report='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/FYP/Interim Report"'
 alias programming='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Programming"'
 alias hncl='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/HNCL/Tutorial_3"'
-alias rtdsp='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/RTDSP/Lab3"'
+alias rtdsp='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/RTDSP/Lab4"'
 alias hpce='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD"'
 alias fyp='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/FYP/Software"'
 
