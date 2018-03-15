@@ -1,12 +1,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     NVIM UI        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map ,vimrc to nvimrc load
 if has('nvim')
-    map <leader>vimrc :source ~/.config/nvim/init.vim<CR>
     tnoremap <Esc> <C-\><C-n>
-else
-    map <leader>vimrc :source ~/.vimrc<CR>
 endif
 
 "Disable 'upper' status bar in nvim
@@ -18,10 +14,30 @@ call plug#begin('~/.local/share/nvim/plugs')
 " Fuzzy search: https://github.com/junegunn/fzf.vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" Git from vim
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
+" Bracket autocompletion
 Plug 'jiangmiao/auto-pairs'
+" Forwards and backwards search replacement, plus new s search feature
+Plug 'justinmk/vim-sneak'
+" Underline matched words in the current buffer
+Plug 'itchyny/vim-cursorword'
+" Tab autocompletion
+Plug 'ervandew/supertab'
+" Peek into the contents of copy-paste-record buffers i<C-r>, n", n@ to peek
+Plug 'junegunn/vim-peekaboo'
 call plug#end()
+
+" Sneak
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
+" Supertab
+let g:SuperTabDefaultCompletionType = "<c-n>"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -48,6 +64,9 @@ set showcmd
 "Set to auto read when a file is changed from outside
 set autoread
 
+"Show search and replace results in split tab
+set inccommand=split
+
 "Enable filetype filtering
 filetype on
 
@@ -61,6 +80,10 @@ filetype indent on
 
 " Set scripts to be executable from the shell
 au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endi
+
+" Map ,evim: edit vimrc, ,ovim: open vimrc
+nmap <silent> <leader>ev :e `=resolve(expand($MYVIMRC))`<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "Turn on Wild Menu
 set wildmenu
@@ -91,29 +114,29 @@ vnoremap dB d^
 "Bracket auto-completition
 "inoremap '      ''<Left>
 "inoremap '<CR>  '<CR>'<Esc>O
-"inoremap ''     '
+inoremap ''     '
 "
 "inoremap "      ""<Left>
 "inoremap "<CR>  "<CR>"<Esc>O
-"inoremap ""     "
+inoremap ""     "
 
 "inoremap (      ()<Left>
 "inoremap (<CR>  (<CR>)<Esc>O
-"inoremap ((     (
-"inoremap ))     )
+inoremap ((     (
+inoremap ))     )
 "inoremap ()     ()
 "
 "inoremap [      []<Left>
 "inoremap [<CR>  [<CR>]<Esc>O
-"inoremap [[     [
-"inoremap ]]     ]
+inoremap [[     [
+inoremap ]]     ]
 "inoremap []     []
 
 "inoremap {      {}<Left>
 autocmd FileType jav,java inoremap {<CR>  {<CR>}<Esc>O
 autocmd FileType c,h,cpp,hpp,cs inoremap {<CR>  <Esc>o{<CR>}<Esc>O
-"inoremap {{     {
-"inoremap }}     }
+inoremap {{     {
+inoremap }}     }
 "inoremap {}     {}<Left>
 
 " Delete surrounding parentheses
@@ -134,7 +157,7 @@ map <right> <nop>
 nnoremap <leader>n ;
 nnoremap <leader>, ,
 
-"map ; to : in normal mode (saves key strikes)
+"map ; to : in normal mode
 nnoremap ; :
 
 "VIM key leader is set space
@@ -209,9 +232,9 @@ vnoremap <S-Tab> <gv
 nnoremap q <C-v>
 
 " copy between vims copy to buffer
-vmap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
+vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
 " paste from buffer
-map <C-v> :r ~/.vimbuffer<CR>
+inoremap <C-v> :r ~/.vimbuffer<CR>
 
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
@@ -272,18 +295,21 @@ function! Replace(bang, replace)
     execute 'argdo %s/' . search . '/' . replace . '/' . flag
 endfunction
 command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
-nnoremap <Leader>r :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
+nnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
+vnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
+
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//gcI\|norm``<left><left><left><left><left><left><left><left><left><left><left>
 
 " Map ctrl-x to close vim tabs
-map <C-x> :tabclose<CR>
+nnoremap <C-x> :tabclose<CR>
 
 " Map ctrl-t to new tab
-map <C-t> :tabnew .<CR>
+nnoremap <C-t> :tabnew .<CR>
 
 " Map shift-j to prev tab (like vimium)
-map <S-j> :tabprevious<CR>
+nnoremap <S-j> :tabprevious<CR>
 " Map shift-k to prev tab (like vimium)
-map <S-k> :tabnext<CR>
+nnoremap <S-k> :tabnext<CR>
 
 " Map Shift-t to restore 1 recently closed tab (assuming no split)
 let g:reopenbuf = expand('%:p')
@@ -312,6 +338,7 @@ nnoremap <leader>save :mksession!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"For some reason this is set even in other filetypes (when .tex are also open)
 " Auto-close $ mathmode
 autocmd FileType tex,bib inoremap $      $$<Left>
 autocmd FileType tex,bib inoremap $$     $
