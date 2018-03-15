@@ -25,19 +25,19 @@ hi IncSearch           ctermfg=0     ctermbg=13    cterm=NONE
 hi LineNr              ctermfg=8     ctermbg=NONE
 hi MatchParen          ctermfg=7     ctermbg=NONE  cterm=underline
 hi NonText             ctermfg=8
-hi Pmenu               ctermfg=15    ctermbg=0
+hi Pmenu               ctermfg=gray  ctermbg=236 
 hi PmenuSBar           ctermbg=8
-hi PmenuSel            ctermfg=0     ctermbg=4
+hi PmenuSel            ctermfg=gray  ctermbg=33 
 hi PmenuThumb          ctermbg=7
 hi Search              ctermfg=0     ctermbg=10
-hi SpellBad            ctermfg=1     ctermbg=NONE  cterm=underline
+hi SpellBad            ctermfg=9     ctermbg=NONE  cterm=underline
 hi SpellCap            ctermfg=10    ctermbg=NONE  cterm=underline
 hi SpellLocal          ctermfg=13    ctermbg=NONE  cterm=underline
 hi SpellRare           ctermfg=11    ctermbg=NONE  cterm=underline
 hi StatusLine          ctermfg=7     ctermbg=0     cterm=bold
 hi StatusLineNC        ctermfg=6     ctermbg=0     cterm=NONE
 hi TabLine             ctermfg=8     ctermbg=0     cterm=NONE
-hi TabLineSel          ctermfg=7     ctermbg=0
+hi TabLineSel          ctermfg=9     ctermbg=0
 hi VertSplit           ctermfg=7     ctermbg=0     cterm=NONE
 hi Visual              ctermfg=0     ctermbg=12
 hi Directory           ctermfg=2
