@@ -79,8 +79,8 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    #PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\W\a\]$PS1"
+    #PS1="\[\e]this;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    PS1="\[\e]this;${debian_chroot:+($debian_chroot)}\W\a\]$PS1"
     ;;
 *)
     ;;
@@ -108,7 +108,7 @@ alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias alert='notify-send --urgency=low -i "$([ $? = this ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[this-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -139,21 +139,31 @@ if [ -z "$TMUX" ]; then
     tmux
 fi
 
-export MY_HOME=/mnt/c/Users/ander
-alias home='cd $MY_HOME'
-alias cdc='cd -'
+export MY_HOME="/mnt/c/Users/ander"
+export ONEDRIVE="/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/"
+export DESKTOP="/mnt/c/Users/ander/Desktop/"
 alias vim='nvim'
+#alias vimrc='$MYVIMRC'
 alias photos.exe='~/.photos.sh'
-alias report='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/FYP/Interim Report"'
-alias programming='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Programming"'
-alias hncl='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/HNCL/Tutorial_3"'
-alias rtdsp='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/RTDSP/Lab4"'
-alias hpce='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD"'
-alias fyp='cd "/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/things/Imperial_stuff/Year_4/FYP/Software"'
+alias home='cd $MY_HOME'
+alias desktop='cd ${DESKTOP}'
+alias cdc='cd -'
+alias report='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Final Report"'
+alias programming='cd "${ONEDRIVE}/things/Imperial_stuff/Programming"'
+alias hncl='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/HNCL/Tutorial_5"'
+alias rtdsp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/RTDSP/Project"'
+alias hpce='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD"'
+alias fyp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Software"'
 
-PROMPT_COMMAND='echo -ne "\033]0;\007"'
+function matlab(){
+    "/mnt/c/Program Files/MATLAB/R2017b/bin/matlab.exe" -nodisplay -nosplash -nodesktop -r "try, run('$1'), catch me, fprintf('%s / %s\n', me.identifier, me.message), end;"
+}
+
+PROMPT_COMMAND='echo -ne "\033]this;\007"'
+
+set -o vi
 
 # Only open home directory, when bash is not called from any particular place.
-if [[ "$PWD" =~ /mnt/c/Windows/System32 || "$PWD" =~ ~/ ]]; then
+if [[ "$PWD" =~ /mnt/c/Windows || "$PWD" =~ ~/ ]]; then
    programming 
 fi
