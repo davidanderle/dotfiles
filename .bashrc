@@ -139,15 +139,21 @@ if [ -z "$TMUX" ]; then
     tmux
 fi
 
+LS_COLORS=$LS_COLORS:'di=0;32:' ; export LS_COLORS
+
 export MY_HOME="/mnt/c/Users/ander"
 export ONEDRIVE="/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/"
 export DESKTOP="/mnt/c/Users/ander/Desktop/"
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export GIT_EDITOR=nvim
 alias vim='nvim'
 #alias vimrc='$MYVIMRC'
 alias photos.exe='~/.photos.sh'
 alias home='cd $MY_HOME'
 alias desktop='cd ${DESKTOP}'
 alias cdc='cd -'
+alias cls='clear && ls'
 alias report='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Final Report"'
 alias programming='cd "${ONEDRIVE}/things/Imperial_stuff/Programming"'
 alias hncl='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/HNCL/Tutorial_5"'

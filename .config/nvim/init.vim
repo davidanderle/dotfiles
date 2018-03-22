@@ -81,10 +81,6 @@ filetype indent on
 " Set scripts to be executable from the shell
 au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endi
 
-" Map ,evim: edit vimrc, ,ovim: open vimrc
-nmap <silent> <leader>ev :e `=resolve(expand($MYVIMRC))`<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
 "Turn on Wild Menu
 set wildmenu
 
@@ -228,14 +224,17 @@ inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-" Map visual block from C-v to q 
-nnoremap q <C-v>
+8
+" Map visual block from C-v to Q 
+nnoremap Q <C-v>
 
 " copy between vims copy to buffer
 vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
 " paste from buffer
 inoremap <C-v> :r ~/.vimbuffer<CR>
 
+" Ctrl-d forward delete word (opposed to ctrl-w)
+inoremap <C-d> <Esc>lldei
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
@@ -335,6 +334,13 @@ nnoremap <S-t> :call ReopenLastTab()<CR>
 
 " Save the current vim session to a file, using ,save
 nnoremap <leader>save :mksession! 
+
+" Map ov: edit vimrc, sv: source vimrc
+nmap <silent> <leader>ov :e `=resolve(expand($MYVIMRC))`<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" Open disassembly
+nnoremap <leader>dis :vnew \|:r w/disassembly<CR> \|:vertical resize 86<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -379,3 +385,4 @@ autocmd FileType tex,bib set textwidth=80
 
 "gg=G: corrects the indentations in the whole file
 "vipgq": format paragraph
+"qq<makro>q to record macro, @q to replay
