@@ -1,3 +1,4 @@
+"&vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     NVIM UI        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -5,7 +6,7 @@ if has('nvim')
     tnoremap <Esc> <C-\><C-n>
 endif
 
-"Disable 'upper' status bar in nvim
+"Disable 'upper' status bar in nvim.
 set laststatus=0
 set diffopt+=vertical
 
@@ -27,6 +28,8 @@ Plug 'itchyny/vim-cursorword'
 Plug 'ervandew/supertab'
 " Peek into the contents of copy-paste-record buffers i<C-r>, n", n@ to peek
 Plug 'junegunn/vim-peekaboo'
+" Error and warning underlining 
+Plug 'w0rp/ale'
 call plug#end()
 
 " Sneak
@@ -38,76 +41,80 @@ map t <Plug>Sneak_t
 map T <Plug>Sneak_T
 " Supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
+" ALE
+let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcsc'],}
+let g:ale_c_gcc_options = '-I include -Wall'
+let g:ale_sign_error = '!'
+let g:ale_sign_warning = '-'
+let g:ale_list_window_size = 5
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_text_changed = 'never'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Enable autoread when file is changed externally (after 1s of 
+" Enable autoread when file is changed externally (after 1s of 
 " normal mode inactivity)
 set autoread
 set updatetime=1000
 au CursorHold * checktime
 
-"Enable relative and normal line numbering
+" Enable relative and normal line numbering
 set relativenumber
 set ruler
 set number
 
-"Disable the creation of swp files
+" Disable the creation of swp files
 set noswapfile
 
-"Enable select all using mouse
+" Enable select all using mouse
 set mouse=a
 
-"Show commands in bottom bar
+" Show commands in bottom bar
 set showcmd
 
-"Set to auto read when a file is changed from outside
+" Set to auto read when a file is changed from outside
 set autoread
 
-"Show search and replace results in split tab
+" Show search and replace results in split tab
 set inccommand=split
 
-"Enable filetype filtering
-filetype on
+" Enable filetype plugins, filetype filtering, and filetype based indentaion
+filetype plugin indent on
 
-"Enable syntax highlight
+" Enable syntax highlight
 syntax on
 
-"Enable filetype plugins
-filetype plugin on
-"Enable filetype based indentaion
-filetype indent on
-
 " Set scripts to be executable from the shell
-au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endi
+au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endif
 
-"Turn on Wild Menu
+" Turn on Wild Menu
 set wildmenu
 
-"Use many level of undo
+" Use many level of undo
 set undolevels=100
 
-"Turn beeping off
+" Turn beeping off
 set visualbell
 set noerrorbells
 
-"Height of the command bar
+" Height of the command bar
 set cmdheight=1
 
-"Move to the beginning of line with Shift-B
+" Move to the beginning of line with Shift-B
 nnoremap B ^
 vnoremap B ^
-"Move to the end of a line with Shift-E
+" Move to the end of a line with Shift-E
 nnoremap E $
 vnoremap E $
-"Delete line from the right of the cursor till the end
+" Delete line from the right of the cursor till the end
 nnoremap dE d$
 vnoremap dE d$
-"Delete line from the left of the cursor till the beginning
+" Delete line from the left of the cursor till the beginning
 nnoremap dB d^
 vnoremap dB d^
 
-"Bracket auto-completition
+" Bracket auto-completition
 "inoremap '      ''<Left>
 "inoremap '<CR>  '<CR>'<Esc>O
 inoremap ''     '
@@ -129,8 +136,8 @@ inoremap ]]     ]
 "inoremap []     []
 
 "inoremap {      {}<Left>
-autocmd FileType jav,java inoremap {<CR>  {<CR>}<Esc>O
-autocmd FileType c,h,cpp,hpp,cs inoremap {<CR>  <Esc>o{<CR>}<Esc>O
+autocmd FileType jav,java inoremap <leader> {<CR>  {<CR>}<Esc>O
+autocmd FileType c,h,cpp,hpp,cs inoremap <leader> {<CR>  <Esc>o{<CR>}<Esc>O
 inoremap {{     {
 inoremap }}     }
 "inoremap {}     {}<Left>
@@ -143,79 +150,79 @@ nnoremap <leader>x( mzdi(va(p`z
 nnoremap <leader>x[ mzdi[va[p`z
 nnoremap <leader>x{ mzdi{va{p`z
 
-"Unbind arrow keys in normal mode
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
+" Unbind arrow keys in normal mode
+map <Up> <nop>
+map <Down> <nop>
+map <Left> <nop>
+map <Right> <nop>
 
-"map f search repetitions forward and backward
+" map f search repetitions forward and backward
 nnoremap <leader>n ;
 nnoremap <leader>, ,
 
-"map ; to : in normal mode
+" map ; to : in normal mode
 nnoremap ; :
 
-"VIM key leader is set space
+" VIM key leader is set space
 let mapleader=" "
 
-"Show matching brackets when text indicator is over them
+" Show matching brackets when text indicator is over them
 set showmatch
 
-"A buffer becomes hidden when it is not used
+" A buffer becomes hidden when it is not used
 set hid
 
-"Centeres lines to the middle of window
+" Centeres lines to the middle of window
 set scrolloff=5
 
-"Toggle/untoggle paste mode
+" Toggle/untoggle paste mode
 set pastetoggle=<F2>
 
-"Set coloscheme to ~/.config/nvim/colors/noctu or ~/.vim/colors/noctu
+" Set coloscheme to ~/.config/nvim/colors/noctu or ~/.vim/colors/noctu
 colorscheme noctu
 
-"Highlight search results (using /something)
+" Highlight search results (using /something)
 set hlsearch
 
-"Incremental search (search during typing)
+" Incremental search (search during typing)
 set incsearch
 
-"Sets tab to 4 spaces"
+" Sets tab to 4 spaces"
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
 
-"Pressing ,ss will toggle and untoggle spell checking
+" Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
 
-"Map source ~/.vimrc to ,vimrc (load .vimrc)
-"map <leader>vimrc :source ~/.vimrc<CR>
+" Map source ~/.vimrc to ,vimrc (load .vimrc)
+" map <leader>vimrc :source ~/.vimrc<CR>
 
-"highlight the 81th char in the row
-"call matchadd('ColorColumn', '\%81v.', 100)
-"highlight ColorColumn ctermbg=234 "Excluded due to bug
+" highlight the 81th char in the row
+" call matchadd('ColorColumn', '\%81v.', 100)
+" highlight ColorColumn ctermbg=234 "Excluded due to bug
 set colorcolumn=80
 
-"Enable folding (hide lines)
+" Enable folding (hide lines)
 set foldenable
 set foldlevelstart=10
-"Max nested folding is 5
+" Max nested folding is 5
 set foldnestmax=5
-"Fold based on indentation
+" Fold based on indentation
 set foldmethod=marker
 
-"Turn off comment completition upon new line from a commented line
+" Turn off comment completition upon new line from a commented line
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-"Set line comments to ,// in normal mode
-autocmd FileType c,h,cpp,hpp,cs,jav,java map <silent><leader>// myBi//<esc>`yll
-autocmd FileType vim map <silent><leader>// myBi"<esc><del>`yll
-autocmd FileType sh map <silent><leader>// myBi#<esc><del>`yll
-"Set line uncomments to ,.. in normal mode
+" Set line comments to ,// in normal mode
+autocmd FileType c,h,cpp,hpp,cs,jav,java map <silent><leader>// myBi//<Esc>`yll
+autocmd FileType vim map <buffer><silent><leader>// myBi" <Esc><Del>`yll
+autocmd FileType sh map <buffer><silent><leader>// myBi#<Esc><Del>`yll
+" Set line uncomments to ,.. in normal mode
 autocmd FileType c,h,cpp,hpp,cs,jav,java map <silent><leader>.. myBxx`yhh
-autocmd FileType vim map <silent><leader>.. myBx`yhh
-autocmd FileType sh map <silent><leader>.. myBx`yhh
+autocmd FileType vim map <buffer><silent><leader>.. myBx`yhh
+autocmd FileType sh map <buffer><silent><leader>.. myBx`yhh
 
 " Map tab and s-tab to indent and deindent, resp
 nnoremap <Tab> >>
@@ -224,7 +231,6 @@ inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
-8
 " Map visual block from C-v to Q 
 nnoremap Q <C-v>
 
@@ -234,7 +240,7 @@ vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe
 inoremap <C-v> :r ~/.vimbuffer<CR>
 
 " Ctrl-d forward delete word (opposed to ctrl-w)
-inoremap <C-d> <Esc>lldei
+inoremap <C-d> <Esc>lwcaw
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
@@ -245,7 +251,7 @@ set fillchars+=vert:\|
 set fillchars+=stlnc:-
 set fillchars+=stl:-
 
-"Echoes the current function being edited to the status line
+" Echoes the current function being edited to the status line
 function! WhatFunctionAreWeIn()
     let strList = ["while", "foreach", "ifelse", "if else", "for", "if", "else", "try", "catch", "case", "switch"]
     let foundcontrol = 1
@@ -279,11 +285,11 @@ function! WhatFunctionAreWeIn()
     call winrestview(view)
     return tempstring.position
 endfunction
-autocmd FileType c,h,cpp,hpp,cs,java,jav map \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
+autocmd FileType c,h,cpp,hpp,cs,java,jav map <buffer> \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
 
 " Search for word under cursor and replace with given text for files in arglist.
-"<leader>r rWord (:Replace rWord), to replace all with confirmation
-":Replace! rWord, to replace all without confirmation
+" <leader>r rWord (:Replace rWord), to replace all with confirmation
+" :Replace! rWord, to replace all without confirmation
 function! Replace(bang, replace)
     let flag = 'ge'
     if !a:bang
@@ -297,7 +303,7 @@ command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
 nnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
 vnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
 
-nnoremap <leader>r :%s/\<<C-r><C-w>\>//gcI\|norm``<left><left><left><left><left><left><left><left><left><left><left>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//gcI\|norm``<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 " Map ctrl-x to close vim tabs
 nnoremap <C-x> :tabclose<CR>
@@ -344,45 +350,54 @@ nnoremap <leader>dis :vnew \|:r w/disassembly<CR> \|:vertical resize 86<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"For some reason this is set even in other filetypes (when .tex are also open)
+" For some reason this is set even in other filetypes (when .tex are also open)
 " Auto-close $ mathmode
-autocmd FileType tex,bib inoremap $      $$<Left>
-autocmd FileType tex,bib inoremap $$     $
+autocmd FileType tex,bib inoremap <buffer> $      $$<Left>
+autocmd FileType tex,bib inoremap <buffer> $$     $
 
 " Put \begin{} \end{} tags tags around the current word
-autocmd FileType tex,bib map  <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
-autocmd FileType tex,bib map! <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<esc>ko
+autocmd FileType tex,bib map <buffer> <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
+autocmd FileType tex,bib map! <buffer> <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
 
-"Disable indentaion when using latex
+" Disable indentaion when using latex
 autocmd FileType tex,bib setl noai nocin nosi inde=
 
-"Turn on spellcheck in Latex documents
+" Turn on spellcheck in Latex documents
 autocmd FileType tex,bib setlocal spell!
-"Specify a personal dictionary. Use zg on the word to add it to the dict.
+" Specify a personal dictionary. Use zg on the word to add it to the dict.
 set spellfile=~/.config/nvim/en.utf-8.add
-"Set default spell check language
+" Set default spell check language
 set spelllang=en
-"Set textwidth to 80 char for automatic formatting. Highlight and gq
+" Set textwidth to 80 char for automatic formatting. Highlight and gq
 autocmd FileType tex,bib set textwidth=80
+
+if did_filetype()
+    finish
+endif
+if getline(1) =~ '"&vim'
+    setfiletype vim
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						    USEFUL CMDS        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"zG ignores mispell once, z= suggests possible corrections
+" zG ignores mispell once, z= suggests possible corrections
 
-"rdaw: Delete a word (stays in norm)
-"diw: Delete inner word
-"dw: Delete word right to the cursor
+" rdaw: Delete a word (stays in norm)
+" diw: Delete inner word
+" dw: Delete word right to the cursor
 
-"caw: Change a word (goes to ins)
-"ciw: Chage inner word
-"cw: Changes word right to the cursor
+" caw: Change a word (goes to ins)
+" ciw: Chage inner word
+" cw: Changes word right to the cursor
 
-"di{, di(, di[: delete inner text inside a {}, () or [] bracket, and remain norm.
-"ci{, ci(, ci[: delete inner text inside.. and go to insert mode.
+" di{, di(, di[: delete inner text inside a {}, () or [] bracket, and remain norm.
+" ci{, ci(, ci[: delete inner text inside.. and go to insert mode.
 
-",save filename.vim: saves the current vim session to a file
-":so filename.vim: loads a saved vim
+" ,save filename.vim: saves the current vim session to a file
+" :so filename.vim: loads a saved vim
 
-"gg=G: corrects the indentations in the whole file
-"vipgq": format paragraph
-"qq<makro>q to record macro, @q to replay
+" gg=G: corrects the indentations in the whole file
+" vipgq": format paragraph
+" qq<makro>q to record macro, @q to replay
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
