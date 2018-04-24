@@ -1,9 +1,15 @@
-"&vim
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     NVIM UI        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('nvim')
     tnoremap <Esc> <C-\><C-n>
+endif
+
+" Set undo directory so that after exitting files, some steps are retained
+if has("persistent_undo")
+    silent !mkdir -p ~/.undodir
+    set undodir=~/.undodir/
+    set undofile
 endif
 
 "Disable 'upper' status bar in nvim.
@@ -234,9 +240,11 @@ vnoremap <S-Tab> <gv
 " Map visual block from C-v to Q 
 nnoremap Q <C-v>
 
-" copy between vims copy to buffer
+" Create vimbuffer file
+silent !touch -a ~/.vimbuffer
+" Copy between vims copy to buffer
 vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
-" paste from buffer
+" Paste from buffer
 inoremap <C-v> :r ~/.vimbuffer<CR>
 
 " Ctrl-d forward delete word (opposed to ctrl-w)
@@ -364,19 +372,13 @@ autocmd FileType tex,bib setl noai nocin nosi inde=
 
 " Turn on spellcheck in Latex documents
 autocmd FileType tex,bib setlocal spell!
-" Specify a personal dictionary. Use zg on the word to add it to the dict.
+" Create and add personal dictionary. Use zg on the word to add it to the dict.
+silent !touch -a ~/.config/nvim/en.utf-8.add
 set spellfile=~/.config/nvim/en.utf-8.add
 " Set default spell check language
 set spelllang=en
 " Set textwidth to 80 char for automatic formatting. Highlight and gq
 autocmd FileType tex,bib set textwidth=80
-
-if did_filetype()
-    finish
-endif
-if getline(1) =~ '"&vim'
-    setfiletype vim
-endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						    USEFUL CMDS        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
