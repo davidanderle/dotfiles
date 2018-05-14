@@ -36,6 +36,8 @@ Plug 'ervandew/supertab'
 Plug 'junegunn/vim-peekaboo'
 " Error and warning underlining 
 Plug 'w0rp/ale'
+" Name split tabs
+Plug 'kcsongor/vim-tabbar'
 call plug#end()
 
 " Sneak
@@ -56,6 +58,9 @@ let g:ale_list_window_size = 5
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = 'never'
+" Tabbar
+set tabline=%!tabbar#tabline()
+nnoremap <leader>n :call tabbar#rename_current_tab()<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

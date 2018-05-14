@@ -173,3 +173,5 @@ set -o vi
 if [[ "$PWD" =~ /mnt/c/Windows || "$PWD" =~ ~/ ]]; then
    programming 
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
