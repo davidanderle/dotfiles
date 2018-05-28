@@ -12,12 +12,18 @@ esac
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 
-# append to the history file, don't overwrite it
-shopt -s histappend
-
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
+
+# avoid duplicates..
+export HISTCONTROL=ignoredups:erasedups
+
+# append history entries..
+shopt -s histappend
+
+# After each command, save and reload history
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -170,7 +176,7 @@ PROMPT_COMMAND='echo -ne "\033]this;\007"'
 set -o vi
 
 # Only open home directory, when bash is not called from any particular place.
-if [[ "$PWD" =~ /mnt/c/Windows || "$PWD" =~ ~/ ]]; then
+if [[ "$PWD" =~ "/mnt/c/WINDOWS" || "$PWD" =~ "/mnt/c/Windows" || "$PWD" =~ ~/ ]]; then
    programming 
 fi
 
