@@ -50,8 +50,8 @@ map T <Plug>Sneak_T
 " Supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 " ALE
-let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcsc'],}
-let g:ale_c_gcc_options = '-I include -Wall'
+let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'],}
+let g:ale_c_gcc_options = '-I include -I "fx/fw_lib/1_3_3/inc" -Wall'
 let g:ale_sign_error = '!'
 let g:ale_sign_warning = '-'
 let g:ale_list_window_size = 5
@@ -221,7 +221,7 @@ set foldlevelstart=10
 " Max nested folding is 5
 set foldnestmax=5
 " Fold based on indentation
-set foldmethod=marker
+set foldmethod=syntax
 
 " Turn off comment completition upon new line from a commented line
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -316,13 +316,13 @@ command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
 nnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
 vnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
 
-nnoremap <leader>r :%s/\<<C-r><C-w>\>//gcI\|norm``<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI\|norm``<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
-" Map ctrl-x to close vim tabs
-nnoremap <C-x> :tabclose<CR>
+" Map space-x to close vim tabs
+nnoremap <leader>w :tabclose<CR>
 
-" Map ctrl-t to new tab
-nnoremap <C-t> :tabnew .<CR>
+" Map space-t to new tab
+nnoremap <leader>t :tabnew .<CR>
 
 " Map shift-j to prev tab (like vimium)
 nnoremap <S-j> :tabprevious<CR>
@@ -354,12 +354,24 @@ nnoremap <S-t> :call ReopenLastTab()<CR>
 " Save the current vim session to a file, using ,save
 nnoremap <leader>save :mksession! 
 
+" Peak function definition
+nnoremap <leader>peek <C-w><C-]>
+
 " Map ov: edit vimrc, sv: source vimrc
 nmap <silent> <leader>ov :e `=resolve(expand($MYVIMRC))`<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
+" Open memory map
+nnoremap <leader>map :vnew \| :setlocal buftype=nofile \| :setlocal bufhidden=hide \| :r bin/memory.map<CR> \| :vertical resize 86<CR>
 " Open disassembly
-nnoremap <leader>dis :vnew \|:r w/disassembly<CR> \|:vertical resize 86<CR>
+nnoremap <leader>dis :call Disassembly()<CR>
+" Create disassembly file if non-existant
+function! Disassembly()
+    if !filereadable("w/disassembly")
+        make disassembly
+    endif
+    vnew | setlocal buftype=nofile | setlocal bufhidden=hide | r w/disassembly | vertical resize 87
+endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
