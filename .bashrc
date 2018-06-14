@@ -165,7 +165,7 @@ alias programming='cd "${ONEDRIVE}/things/Imperial_stuff/Programming"'
 alias hncl='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/HNCL/Tutorial_5"'
 alias rtdsp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/RTDSP/Project"'
 alias hpce='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD"'
-alias fyp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Software"'
+alias fyp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Software/Firmware"'
 
 function matlab(){
     "/mnt/c/Program Files/MATLAB/R2017b/bin/matlab.exe" -nodisplay -nosplash -nodesktop -r "try, run('$1'), catch me, fprintf('%s / %s\n', me.identifier, me.message), end;"
