@@ -38,6 +38,14 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'w0rp/ale'
 " Name split tabs
 Plug 'kcsongor/vim-tabbar'
+" Replace
+Plug 'dkprice/vim-easygrep'
+" LaTeX
+Plug 'lervag/vimtex'
+" Debugging
+Plug 'vim-scripts/Conque-GDB'
+" Improved search to delete highlightings after jumps
+Plug 'haya14busa/incsearch.vim'
 call plug#end()
 
 " Sneak
@@ -49,9 +57,15 @@ map t <Plug>Sneak_t
 map T <Plug>Sneak_T
 " Supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabNoCompleteAfter = [')', ']', '>', '}', '\s', ',', ':', ';', '/', 
+                               \ '=', '-', '+', '&', '|', '^', '$']
+let g:SuperTabCrMapping = 1
 " ALE
-let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'],}
-let g:ale_c_gcc_options = '-I include -I "fx/fw_lib/1_3_3/inc" -Wall'
+let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
+                    \'LaTeX': ['alex'], 'Make': ['checkmake'], 'vim': ['vint'],
+                    \'Bash': ['shellcheck']}
+let g:ale_linters_explicit = 1
+let g:ale_c_gcc_options = '-I "include" -I "fx/fw_lib/1_3_3/inc" -Wall'
 let g:ale_sign_error = '!'
 let g:ale_sign_warning = '-'
 let g:ale_list_window_size = 5
@@ -61,11 +75,33 @@ let g:ale_lint_on_text_changed = 'never'
 " Tabbar
 set tabline=%!tabbar#tabline()
 nnoremap <leader>n :call tabbar#rename_current_tab()<cr>
+" Easygrep
+let g:EasyGrepMode = 2
+let g:EasyGrepCommand = 1
+let g:EasyGrepJumpToMatch = 0
+let g:EasyGrepInvertWholeWord = 1
+" Vimtex
+let g:vimtex_compiler_enabled = 0
+" Conque-GDB
+let g:ConqueGdb_GdbExe = 'arm-none-eabi-gdb'
+let g:ConqueGdb_Leader = ','
+" Insearch
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+cmap <Tab> <Plug>(insearch-next)
+cmap <S-Tab> <Plug>(insearch-prev)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable autoread when file is changed externally (after 1s of 
-" normal mode inactivity)
+" Enable autoread when file is changed externally (after 1s normal m inactivity)
 set autoread
 set updatetime=1000
 au CursorHold * checktime
@@ -89,6 +125,8 @@ set autoread
 
 " Show search and replace results in split tab
 set inccommand=split
+
+set ignorecase
 
 " Enable filetype plugins, filetype filtering, and filetype based indentaion
 filetype plugin indent on
@@ -170,6 +208,9 @@ map <Right> <nop>
 " map f search repetitions forward and backward
 nnoremap <leader>n ;
 nnoremap <leader>, ,
+" Map Ctrl-space to substitute a non-word regex character. Useful for multi-line
+"searches and for words separated by an unknown type and unknown number of chars
+cmap <c-space> \_W\+
 
 " map ; to : in normal mode
 nnoremap ; :
@@ -253,7 +294,7 @@ vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe
 inoremap <C-v> :r ~/.vimbuffer<CR>
 
 " Ctrl-d forward delete word (opposed to ctrl-w)
-inoremap <C-d> <Esc>lwcaw
+inoremap <C-d> <Esc>lcaw
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
@@ -264,58 +305,7 @@ set fillchars+=vert:\|
 set fillchars+=stlnc:-
 set fillchars+=stl:-
 
-" Echoes the current function being edited to the status line
-function! WhatFunctionAreWeIn()
-    let strList = ["while", "foreach", "ifelse", "if else", "for", "if", "else", "try", "catch", "case", "switch"]
-    let foundcontrol = 1
-    let position = ""
-    let pos=getpos(".")          " This saves the cursor position
-    let view=winsaveview()       " This saves the window view
-    while (foundcontrol)
-        let foundcontrol = 0
-        normal [{
-        call search('\S','bW')
-        let tempchar = getline(".")[col(".") - 1]
-        if (match(tempchar, ")") >=0 )
-            normal %
-            call search('\S','bW')
-        endif
-        let tempstring = getline(".")
-        for item in strList
-            if( match(tempstring,item) >= 0 )
-                let position = item . " - " . position
-                let foundcontrol = 1
-                break
-            endif
-        endfor
-        if(foundcontrol == 0)
-            call cursor(pos)
-            call winrestview(view)
-            return tempstring.position
-        endif
-    endwhile
-    call cursor(pos)
-    call winrestview(view)
-    return tempstring.position
-endfunction
-autocmd FileType c,h,cpp,hpp,cs,java,jav map <buffer> \func :let name = WhatFunctionAreWeIn()<CR> :echo name<CR>
-
-" Search for word under cursor and replace with given text for files in arglist.
-" <leader>r rWord (:Replace rWord), to replace all with confirmation
-" :Replace! rWord, to replace all without confirmation
-function! Replace(bang, replace)
-    let flag = 'ge'
-    if !a:bang
-        let flag .= 'c'
-    endif
-    let search = '\<' . escape(expand('<cword>'), '/\.*$^~[') . '\>'
-    let replace = escape(a:replace, '/\&~')
-    execute 'argdo %s/' . search . '/' . replace . '/' . flag
-endfunction
-command! -nargs=1 -bang Replace :call Replace(<bang>0, <q-args>)
-nnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
-vnoremap <Leader>R :call Replace(0, input('Replace '.expand('<cword>').' with: '))<CR>
-
+" Search for word under cursor and replace with given text <leader>r rWord 
 nnoremap <leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI\|norm``<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 " Map space-x to close vim tabs
@@ -351,18 +341,21 @@ augroup ReopenLastTab
 augroup END
 nnoremap <S-t> :call ReopenLastTab()<CR>
 
+" TODO: set winfixwidth
 " Save the current vim session to a file, using ,save
-nnoremap <leader>save :mksession! 
+nnoremap <leader>save :mksession! workspace.vim<CR>
 
 " Peak function definition
 nnoremap <leader>peek <C-w><C-]>
 
-" Map ov: edit vimrc, sv: source vimrc
+" Map ov: open vimrc, sv: source vimrc
 nmap <silent> <leader>ov :e `=resolve(expand($MYVIMRC))`<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 " Open memory map
-nnoremap <leader>map :vnew \| :setlocal buftype=nofile \| :setlocal bufhidden=hide \| :r bin/memory.map<CR> \| :vertical resize 86<CR>
+nnoremap <leader>map :vnew \| :setlocal buftype=nofile \| 
+                   \ :setlocal bufhidden=hide \| :r bin/memory.map<CR> \| 
+                   \ :vertical resize 86<CR>
 " Open disassembly
 nnoremap <leader>dis :call Disassembly()<CR>
 " Create disassembly file if non-existant
@@ -370,7 +363,8 @@ function! Disassembly()
     if !filereadable("w/disassembly")
         make disassembly
     endif
-    vnew | setlocal buftype=nofile | setlocal bufhidden=hide | r w/disassembly | vertical resize 87
+    vnew | setlocal buftype=nofile | setlocal bufhidden=hide | r w/disassembly | 
+         \ vertical resize 87
 endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
@@ -379,10 +373,10 @@ endfunction
 " Auto-close $ mathmode
 autocmd FileType tex,bib inoremap <buffer> $      $$<Left>
 autocmd FileType tex,bib inoremap <buffer> $$     $
-
-" Put \begin{} \end{} tags tags around the current word
-autocmd FileType tex,bib map <buffer> <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
-autocmd FileType tex,bib map! <buffer> <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
+"
+"" Put \begin{} \end{} tags tags around the current word
+"autocmd FileType tex,bib map <buffer> <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
+"autocmd FileType tex,bib map! <buffer> <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
 
 " Disable indentaion when using latex
 autocmd FileType tex,bib setl noai nocin nosi inde=
