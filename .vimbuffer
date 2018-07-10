@@ -1,7 +1,0 @@
-    for(y = 0; y < h; y++){
-        for(x = 0; x < w; x++){
-            std::cerr<<packedProperties[x+y*w];
-            if(x == w-1)
-                std::cerr<<"\n";
-        }
-    }
