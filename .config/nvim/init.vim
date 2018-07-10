@@ -5,7 +5,7 @@ if has('nvim')
     tnoremap <Esc> <C-\><C-n>
 endif
 
-" Set undo directory so that after exitting files, some steps are retained
+" Set undo directory so that after exiting files, some steps can be redone
 if has("persistent_undo")
     silent !mkdir -p ~/.undodir
     set undodir=~/.undodir/
@@ -17,6 +17,12 @@ set laststatus=0
 set diffopt+=vertical
 
 " Plugin manager plugin for nvim: https://github.com/junegunn/vim-plug
+" Automatically install manager and the plugins if not installed
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 call plug#begin('~/.local/share/nvim/plugs')
 " Fuzzy search: https://github.com/junegunn/fzf.vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -46,6 +52,10 @@ Plug 'lervag/vimtex'
 Plug 'vim-scripts/Conque-GDB'
 " Improved search to delete highlightings after jumps
 Plug 'haya14busa/incsearch.vim'
+" Indent line for easier backet matching
+Plug 'Yggdroot/indentLine'
+" Search highlighting
+"Plug 'timakro/vim-searchant'
 call plug#end()
 
 " Sneak
@@ -62,7 +72,7 @@ let g:SuperTabNoCompleteAfter = [')', ']', '>', '}', '\s', ',', ':', ';', '/',
 let g:SuperTabCrMapping = 1
 " ALE
 let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
-                    \'LaTeX': ['alex'], 'Make': ['checkmake'], 'vim': ['vint'],
+                    \'Make': ['checkmake'], 'vim': ['vint'],
                     \'Bash': ['shellcheck']}
 let g:ale_linters_explicit = 1
 let g:ale_c_gcc_options = '-I "include" -I "fx/fw_lib/1_3_3/inc" -Wall'
@@ -96,8 +106,9 @@ map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
-cmap <Tab> <Plug>(insearch-next)
-cmap <S-Tab> <Plug>(insearch-prev)
+" IndentLine
+let g:indentLine_char = '┆'
+nnoremap <leader>itog :IndentLinesToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -105,6 +116,9 @@ cmap <S-Tab> <Plug>(insearch-prev)
 set autoread
 set updatetime=1000
 au CursorHold * checktime
+
+" Encoding
+set encoding=utf-8
 
 " Enable relative and normal line numbering
 set relativenumber
@@ -126,16 +140,12 @@ set autoread
 " Show search and replace results in split tab
 set inccommand=split
 
+" Always open the splits on the right side
+set splitright
+
+" Ignore the cases when searching, except when including upper cases
 set ignorecase
-
-" Enable filetype plugins, filetype filtering, and filetype based indentaion
-filetype plugin indent on
-
-" Enable syntax highlight
-syntax on
-
-" Set scripts to be executable from the shell
-au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endif
+set smartcase
 
 " Turn on Wild Menu
 set wildmenu
@@ -150,9 +160,69 @@ set noerrorbells
 " Height of the command bar
 set cmdheight=1
 
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" A buffer becomes hidden when it is not used
+set hid
+
+" Centers lines to the middle of window
+set scrolloff=5
+
+" Toggle/untoggle paste mode
+set pastetoggle=<F2>
+
+" Highlight search results (using /something)
+set hlsearch
+
+" Incremental search (search during typing)
+set incsearch
+
+" Visualize tabs and newlines
+set list
+set listchars=tab:▸\ ,nbsp:.,trail:·
+
+" Show trailing whitespace and spaces for tabs
+"map <leader>L /\s\+$<CR>
+
+" Sets tab to 4 spaces"
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+
+" Highlight the 80 char column
+set colorcolumn=80
+
+" Enable folding (hide lines)
+set foldenable
+set foldlevelstart=10
+" Max nested folding is 5
+set foldnestmax=5
+" Fold based on indentation
+set foldmethod=syntax
+
+" Enable filetype plugins, filetype filtering, and filetype based indentaion
+filetype plugin indent on
+
+" Enable syntax highlight
+syntax on
+
+" Set scripts to be executable from the shell
+au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endif
+
+" VIM key leader is set space
+let mapleader=" "
+
+" Set coloscheme to ~/.config/nvim/colors/noctu or ~/.vim/colors/noctu
+colorscheme noctu
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"        						    MAPPINGS         					       "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Move to the beginning of line with Shift-B
-nnoremap B ^
-vnoremap B ^
+"nnoremap B ^
+"vnoremap B ^
 " Move to the end of a line with Shift-E
 nnoremap E $
 vnoremap E $
@@ -160,36 +230,26 @@ vnoremap E $
 nnoremap dE d$
 vnoremap dE d$
 " Delete line from the left of the cursor till the beginning
-nnoremap dB d^
-vnoremap dB d^
+"nnoremap dB d^
+"vnoremap dB d^
 
 " Bracket auto-completition
-"inoremap '      ''<Left>
-"inoremap '<CR>  '<CR>'<Esc>O
 inoremap ''     '
-"
-"inoremap "      ""<Left>
-"inoremap "<CR>  "<CR>"<Esc>O
+
 inoremap ""     "
 
-"inoremap (      ()<Left>
-"inoremap (<CR>  (<CR>)<Esc>O
 inoremap ((     (
 inoremap ))     )
-"inoremap ()     ()
-"
-"inoremap [      []<Left>
-"inoremap [<CR>  [<CR>]<Esc>O
+inoremap ()     ()
+
 inoremap [[     [
 inoremap ]]     ]
-"inoremap []     []
+inoremap []     []
 
-"inoremap {      {}<Left>
 autocmd FileType jav,java inoremap <leader> {<CR>  {<CR>}<Esc>O
 autocmd FileType c,h,cpp,hpp,cs inoremap <leader> {<CR>  <Esc>o{<CR>}<Esc>O
 inoremap {{     {
 inoremap }}     }
-"inoremap {}     {}<Left>
 
 " Delete surrounding parentheses
 nnoremap <leader>x) zdi(va(p`z
@@ -215,60 +275,14 @@ cmap <c-space> \_W\+
 " map ; to : in normal mode
 nnoremap ; :
 
-" VIM key leader is set space
-let mapleader=" "
-
-" Show matching brackets when text indicator is over them
-set showmatch
-
-" A buffer becomes hidden when it is not used
-set hid
-
-" Centeres lines to the middle of window
-set scrolloff=5
-
-" Toggle/untoggle paste mode
-set pastetoggle=<F2>
-
-" Set coloscheme to ~/.config/nvim/colors/noctu or ~/.vim/colors/noctu
-colorscheme noctu
-
-" Highlight search results (using /something)
-set hlsearch
-
-" Incremental search (search during typing)
-set incsearch
-
-" Sets tab to 4 spaces"
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
-
-" Map source ~/.vimrc to ,vimrc (load .vimrc)
-" map <leader>vimrc :source ~/.vimrc<CR>
-
-" highlight the 81th char in the row
-" call matchadd('ColorColumn', '\%81v.', 100)
-" highlight ColorColumn ctermbg=234 "Excluded due to bug
-set colorcolumn=80
-
-" Enable folding (hide lines)
-set foldenable
-set foldlevelstart=10
-" Max nested folding is 5
-set foldnestmax=5
-" Fold based on indentation
-set foldmethod=syntax
 
 " Turn off comment completition upon new line from a commented line
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Set line comments to ,// in normal mode
-autocmd FileType c,h,cpp,hpp,cs,jav,java map <silent><leader>// myBi//<Esc>`yll
+autocmd FileType c,h,cpp,hpp,cs,jav,java map <silent><leader>// my<C-^>i//<Esc>`yll
 autocmd FileType vim map <buffer><silent><leader>// myBi" <Esc><Del>`yll
 autocmd FileType sh map <buffer><silent><leader>// myBi#<Esc><Del>`yll
 " Set line uncomments to ,.. in normal mode
@@ -277,8 +291,6 @@ autocmd FileType vim map <buffer><silent><leader>.. myBx`yhh
 autocmd FileType sh map <buffer><silent><leader>.. myBx`yhh
 
 " Map tab and s-tab to indent and deindent, resp
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
 inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
@@ -306,7 +318,8 @@ set fillchars+=stlnc:-
 set fillchars+=stl:-
 
 " Search for word under cursor and replace with given text <leader>r rWord 
-nnoremap <leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI\|norm``<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI\|norm``<Left><Left><Left>
+							\ <Left><Left><Left><Left><Left><Left><Left><Left>
 
 " Map space-x to close vim tabs
 nnoremap <leader>w :tabclose<CR>
@@ -343,10 +356,13 @@ nnoremap <S-t> :call ReopenLastTab()<CR>
 
 " TODO: set winfixwidth
 " Save the current vim session to a file, using ,save
-nnoremap <leader>save :mksession! workspace.vim<CR>
+nnoremap <leader>save :set winfixwidth \| :mksession! workspace.vim<CR>
 
 " Peak function definition
 nnoremap <leader>peek <C-w><C-]>
+
+" Map space-m to compile after save
+"autocmd FileType c,cpp,h,hpp nnoremap <leader>m :wa! \| make
 
 " Map ov: open vimrc, sv: source vimrc
 nmap <silent> <leader>ov :e `=resolve(expand($MYVIMRC))`<CR>
@@ -369,16 +385,19 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     LATEX           					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Don't jump to the errors after calling :make. Also, save the file befor make
+autocmd FileType tex,bib nnoremap <leader>m :wa! \| :make!
+
 " For some reason this is set even in other filetypes (when .tex are also open)
 " Auto-close $ mathmode
 autocmd FileType tex,bib inoremap <buffer> $      $$<Left>
 autocmd FileType tex,bib inoremap <buffer> $$     $
 "
 "" Put \begin{} \end{} tags tags around the current word
-"autocmd FileType tex,bib map <buffer> <C-B>      YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
-"autocmd FileType tex,bib map! <buffer> <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
+autocmd FileType tex,bib map <buffer> <C-B> YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
+autocmd FileType tex,bib map! <buffer> <C-B> <ESC>YpkI\begin{{<ESC>A}}<ESC>jI\end{{<ESC>A}}<Esc>ko
 
-" Disable indentaion when using latex
+" Disable indentation when using latex
 autocmd FileType tex,bib setl noai nocin nosi inde=
 
 " Turn on spellcheck in Latex documents
