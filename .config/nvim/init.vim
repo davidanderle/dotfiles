@@ -108,6 +108,7 @@ map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 " IndentLine
 let g:indentLine_char = '┆'
+let g:indentLine_enabled = 0
 nnoremap <leader>itog :IndentLinesToggle<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     VIM UI         					       "
