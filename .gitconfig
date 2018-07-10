@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = "davidanderle"
+	email = anderle.david@gmail.com
+[credentials]
+	helper = wincred
+[push]
+	default = simple
+[core]
+	autocrlf = false
+	editor = vim
