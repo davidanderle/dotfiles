@@ -1,4 +1,5 @@
 *
+!.ctags
 !.config/nvim
 !.bashrc
 !.gitconfig

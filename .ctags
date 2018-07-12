@@ -1,0 +1,11 @@
+--langdef=bib
+--langmap=bib:.bib
+--regex-bib=/@string\{([^ "#%')(,=}{]+)/\1/s,BibTeX-Strings/i
+--regex-bib=/@(article|book|booklet|inbook|incollection|inproceedings|manual|masterthesis|misc|phdthesis|proceedings|techreport|unpublished)\{([^,]+),/\2/e,BibTeX-Entries/i
+--regex-bib=/[[:space:]]*author[[:space:]]*=[[:space:]]*("([^"]+)"|\{([^\}]+)\})[[:space:]]*,?[[:space:]]*$/\2\3/a,BibTeX-Authors/i
+--regex-bib=/^@[A-Za-z]+\{([^,]*)/\1/b,bib/
+--langdef=tex2
+--langmap=tex2:.tex
+--regex-tex2=/\\label[ \t]*\*?\{[ \t]*([^}]*)\}/\1/l,label/
+--regex-tex2=/\\newglossaryentry[ \t]*\*?\{[ \t]*([^}]*)\}/\1/l,Gls/
+--regex-tex2=/\\newglossaryentry[ \t]*\*?\{[ \t]*([^}]*)\}/\1/l,gls/
