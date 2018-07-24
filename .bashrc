@@ -147,25 +147,24 @@ fi
 
 LS_COLORS=$LS_COLORS:'di=0;32:' ; export LS_COLORS
 
-export MY_HOME="/mnt/c/Users/ander"
-export ONEDRIVE="/mnt/c/Users/ander/OneDrive/ICL/OneDrive - Imperial College London/"
-export DESKTOP="/mnt/c/Users/ander/Desktop/"
+export MY_HOME="/mnt/c/Users/anderle"
+export ONEDRIVE="/mnt/c/Users/anderle/OneDrive - Imperial College London"
+export DESKTOP="/mnt/c/Users/anderle/Desktop/"
+export PATH="$PATH:~/"
+export PATH="$PATH:/mnt/c/Windows/Microsoft.NET/Framework64/v4.0.30319"
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export GIT_EDITOR=nvim
 alias vim='nvim'
-#alias vimrc='$MYVIMRC'
-alias photos.exe='~/.photos.sh'
+alias csc='csc.exe'
+alias photos='~/.photos.sh'
 alias home='cd $MY_HOME'
 alias desktop='cd ${DESKTOP}'
 alias cdc='cd -'
 alias cls='clear && ls'
-alias report='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Presentation"'
-alias programming='cd "${ONEDRIVE}/things/Imperial_stuff/Programming"'
-alias hncl='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/HNCL/Tutorial_5"'
-alias rtdsp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/RTDSP/Project"'
-alias hpce='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/hpce/hpce-2017-cw6-DoubleD"'
-alias fyp='cd "${ONEDRIVE}/things/Imperial_stuff/Year_4/FYP/Software/Firmware"'
+alias report='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Presentation"'
+alias programming='cd "${ONEDRIVE}/Programming"'
+alias fyp='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Software/Firmware"'
 
 PROMPT_COMMAND='echo -ne "\033]this;\007"'
 
@@ -173,7 +172,7 @@ set -o vi
 
 # Only open home directory, when bash is not called from any particular place.
 if [[ "$PWD" =~ "/mnt/c/WINDOWS" || "$PWD" =~ "/mnt/c/Windows" || "$PWD" =~ ~/ ]]; then
-   programming 
+   programming
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
