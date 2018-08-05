@@ -183,6 +183,9 @@ set incsearch
 set list
 set listchars=tab:▸\ ,nbsp:.,trail:·
 
+" Always show tabline
+set showtabline=2
+
 " Show trailing whitespace and spaces for tabs
 "map <leader>L /\s\+$<CR>
 
