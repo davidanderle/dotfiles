@@ -72,14 +72,13 @@ let g:SuperTabNoCompleteAfter = [')', ']', '>', '}', '\s', ',', ':', ';', '/',
                                \ '=', '-', '+', '&', '|', '^', '$']
 let g:SuperTabCrMapping = 1
 " ALE
-let g:ale_linters  = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs']}
-let g:ale_linters += {'Make': ['checkmake'], 'vim': ['vint']}
-let g:ale_linters += {'Bash': ['shellcheck'], 'Rust': ['cargo']}
-
-let g:ale_c_gcc_options += '-I "include" -I "inc"'
-let g:ale_c_gcc_options += '-Wall'
-
+let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
+                    \'Make': ['checkmake'], 'vim': ['vint'],
+                    \'Bash': ['shellcheck'], 'Rust': ['cargo']}
 let g:ale_linters_explicit = 1
+let g:ale_c_gcc_options = '-I "include" 
+                         \ -I "inc" 
+                         \ -Wall'
 let g:ale_sign_error = '!'
 let g:ale_sign_warning = '-'
 let g:ale_list_window_size = 5
