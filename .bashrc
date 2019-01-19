@@ -155,6 +155,8 @@ export PATH="$PATH:/mnt/c/Windows/Microsoft.NET/Framework64/v4.0.30319"
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export GIT_EDITOR=nvim
+export PATH="$PATH:$DESKTOP/wabt/bin/"
+source "$DESKTOP/emsdk/emsdk_env.sh" --build=Release > /dev/null
 alias vim='nvim'
 alias csc='csc.exe'
 alias photos='~/.photos.sh'
@@ -166,10 +168,11 @@ alias cls='clear && ls'
 alias report='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Presentation"'
 alias programming='cd "${ONEDRIVE}/Programming"'
 alias fyp='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Software/Firmware"'
+alias fuzz='cd "${ONEDRIVE}/Programming/fuzzyfox/engine"'
 
 PROMPT_COMMAND='echo -ne "\033]this;\007"'
 
-set -o vi
+#set -o vi
 
 # Only open home directory, when bash is not called from any particular place.
 if [[ "$PWD" =~ "/mnt/c/WINDOWS" || "$PWD" =~ "/mnt/c/Windows" || "$PWD" =~ ~/ ]]; then

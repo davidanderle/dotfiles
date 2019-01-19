@@ -12,10 +12,6 @@ if has("persistent_undo")
     set undofile
 endif
 
-"Disable 'upper' status bar in nvim.
-set laststatus=0
-set diffopt+=vertical
-
 " Plugin manager plugin for nvim: https://github.com/junegunn/vim-plug
 " Automatically install manager and the plugins if not installed
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -23,6 +19,9 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+" TODO: Check Csongor's vimrc for preview word function
+" TODO: Check Csongor's refactor.vim plugin
+" TODO: map :Git add % to something to add current file to git
 call plug#begin('~/.local/share/nvim/plugs')
 " Fuzzy search: https://github.com/junegunn/fzf.vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -54,6 +53,8 @@ Plug 'vim-scripts/Conque-GDB'
 Plug 'haya14busa/incsearch.vim'
 " Indent line for easier backet matching
 Plug 'Yggdroot/indentLine'
+" Rust lang file and syntax support
+Plug 'rust-lang/rust.vim'
 " Search highlighting
 "Plug 'timakro/vim-searchant'
 call plug#end()
@@ -71,11 +72,14 @@ let g:SuperTabNoCompleteAfter = [')', ']', '>', '}', '\s', ',', ':', ';', '/',
                                \ '=', '-', '+', '&', '|', '^', '$']
 let g:SuperTabCrMapping = 1
 " ALE
-let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
-                    \'Make': ['checkmake'], 'vim': ['vint'],
-                    \'Bash': ['shellcheck']}
+let g:ale_linters  = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs']}
+let g:ale_linters += {'Make': ['checkmake'], 'vim': ['vint']}
+let g:ale_linters += {'Bash': ['shellcheck'], 'Rust': ['cargo']}
+
+let g:ale_c_gcc_options += '-I "include" -I "inc"'
+let g:ale_c_gcc_options += '-Wall'
+
 let g:ale_linters_explicit = 1
-let g:ale_c_gcc_options = '-I "include" -I "fx/fw_lib/1_3_3/inc" -Wall'
 let g:ale_sign_error = '!'
 let g:ale_sign_warning = '-'
 let g:ale_list_window_size = 5
@@ -122,9 +126,8 @@ au CursorHold * checktime
 set encoding=utf-8
 
 " Enable relative and normal line numbering
-set relativenumber
-set ruler
 set number
+set relativenumber
 
 " Disable the creation of swp files
 set noswapfile
@@ -134,6 +137,15 @@ set mouse=a
 
 " Show commands in bottom bar
 set showcmd
+
+" Enable ruler status line and show totalLine/currentLine, column, page%
+set ruler
+set rulerformat=%2v:%l/%L\ %3p%%
+"set statusline equals rulerformat by defualt
+
+"Disable 'upper' status bar in nvim.
+set laststatus=0
+set diffopt+=vertical
 
 " Set to auto read when a file is changed from outside
 set autoread
@@ -183,7 +195,7 @@ set incsearch
 set list
 set listchars=tab:▸\ ,nbsp:.,trail:·
 
-" Always show tabline
+" Always show tabline on top
 set showtabline=2
 
 " Show trailing whitespace and spaces for tabs
