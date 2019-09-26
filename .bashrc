@@ -148,27 +148,27 @@ fi
 LS_COLORS=$LS_COLORS:'di=0;32:' ; export LS_COLORS
 
 export MY_HOME="/mnt/c/Users/anderle"
-export ONEDRIVE="/mnt/c/Users/anderle/OneDrive - Imperial College London"
+export DROPBOX="/mnt/c/Users/anderle/Dropbox"
 export DESKTOP="/mnt/c/Users/anderle/Desktop/"
 export PATH="$PATH:~/"
-export PATH="$PATH:/mnt/c/Windows/Microsoft.NET/Framework64/v4.0.30319"
+#export PATH="$PATH:/mnt/c/Windows/Microsoft.NET/Framework64/v4.0.30319"
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 export GIT_EDITOR=nvim
 export PATH="$PATH:$DESKTOP/wabt/bin/"
-source "$DESKTOP/emsdk/emsdk_env.sh" --build=Release > /dev/null
+#source "$DESKTOP/emsdk/emsdk_env.sh" --build=Release > /dev/null
 alias vim='nvim'
-alias csc='csc.exe'
+#alias csc='csc.exe'
 alias photos='~/.photos.sh'
 alias home='cd $MY_HOME'
-alias cloud='cd "${ONEDRIVE}"'
+alias cloud='cd "${DROPBOX}"'
 alias desktop='cd ${DESKTOP}'
 alias cdc='cd -'
 alias cls='clear && ls'
-alias report='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Presentation"'
-alias programming='cd "${ONEDRIVE}/Programming"'
-alias fyp='cd "${ONEDRIVE}/Imperial College London/Year_4/FYP/Software/Firmware"'
-alias fuzz='cd "${ONEDRIVE}/Programming/fuzzyfox/engine"'
+alias report='cd "${DROPBOX}/Imperial College London/Year_4/FYP/Presentation"'
+alias programming='cd "${DROPBOX}/Programming"'
+alias fyp='cd "${DROPBOX}/Imperial College London/Year_4/FYP/Software/Firmware"'
+alias fuzz='cd "${DROPBOX}/Programming/fuzzyfox/engine"'
 
 PROMPT_COMMAND='echo -ne "\033]this;\007"'
 

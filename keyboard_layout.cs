@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using System.Threading;
 
 public class KeyboardLayout{
-	[STAThread]
-	static void Main( string[] args )
-	{
+    [STAThread]
+    static void Main( string[] args )
+    {
         string language = InputLanguage.CurrentInputLanguage.Culture.Name;
         try {
             language = language.Split('-')[1];

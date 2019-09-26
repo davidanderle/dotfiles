@@ -1,4 +1,25 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                Char rendering                                "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"syntax match [Group] [regex]{ms=int,me=int} conceal cchar=[single char]
+au! FileType * syntax match Operators "<=" conceal cchar=≤
+au! FileType * syntax match Operators ">=" conceal cchar=≥
+au! FileType * syntax match Operators "==" conceal cchar=≡
+au! FileType * syntax match Operators "->" conceal cchar=→
+au! FileType * syntax match Operators "<-" conceal cchar=←
+au! FileType * syntax match Operators "=>" conceal cchar=⇒
+au! FileType * syntax match Operators "<=" conceal cchar=⇐
+au! FileType * syntax match Operators "::" conceal cchar=∷
+au! FileType * syntax match Operators "!=" conceal cchar=≠
+
+" Allow conceal in normal, insert, and visual modes
+set conceallevel=1
+set concealcursor=niv
+
+" Allow highlighting on the above operators
+hi link Operators Operator
+hi! link Conceal Operator
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "        						     NVIM UI        					       "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('nvim')
@@ -36,11 +57,13 @@ Plug 'justinmk/vim-sneak'
 " Underline matched words in the current buffer
 Plug 'itchyny/vim-cursorword'
 " Tab autocompletion
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab'
+" Autocompletion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Peek into the contents of copy-paste-record buffers i<C-r>, n", n@ to peek
 Plug 'junegunn/vim-peekaboo'
 " Error and warning underlining 
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
 " Name split tabs
 Plug 'kcsongor/vim-tabbar'
 " Replace
@@ -55,10 +78,7 @@ Plug 'haya14busa/incsearch.vim'
 Plug 'Yggdroot/indentLine'
 " Rust lang file and syntax support
 Plug 'rust-lang/rust.vim'
-" Search highlighting
-"Plug 'timakro/vim-searchant'
 call plug#end()
-
 " Sneak
 let g:sneak#label = 1
 let g:sneak#s_next = 1
@@ -72,19 +92,20 @@ let g:SuperTabNoCompleteAfter = [')', ']', '>', '}', '\s', ',', ':', ';', '/',
                                \ '=', '-', '+', '&', '|', '^', '$']
 let g:SuperTabCrMapping = 1
 " ALE
-let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
-                    \'Make': ['checkmake'], 'vim': ['vint'],
-                    \'Bash': ['shellcheck'], 'Rust': ['cargo']}
-let g:ale_linters_explicit = 1
-let g:ale_c_gcc_options = '-I "include" 
-                         \ -I "inc" 
-                         \ -Wall'
-let g:ale_sign_error = '!'
-let g:ale_sign_warning = '-'
-let g:ale_list_window_size = 5
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_text_changed = 'never'
+"let g:ale_linters = {'c': ['gcc'],'cpp': ['gcc'],'cs': ['mcs'], 
+"                    \'Make': ['checkmake'], 'vim': ['vint'],
+"                    \'Bash': ['shellcheck'], 'Rust': ['rustc']}
+"let g:ale_linters_explicit = 1
+"let g:ale_c_gcc_options = '-I "include" 
+"                         \ -I "inc" 
+"                         \ -Wall'
+"let g:ale_sign_error = '!'
+"let g:ale_sign_warning = '-'
+"let g:ale_list_window_size = 5
+"let g:ale_lint_on_save = 1
+"let g:ale_lint_on_enter = 1
+"let g:ale_lint_on_text_changed = 'never'
+"let g:ale_c_parse_makefile = 1
 " Tabbar
 set tabline=%!tabbar#tabline()
 nnoremap <leader>n :call tabbar#rename_current_tab()<cr>
@@ -113,8 +134,14 @@ map g# <Plug>(incsearch-nohl-g#)
 let g:indentLine_char = '┆'
 let g:indentLine_enabled = 0
 nnoremap <leader>itog :IndentLinesToggle<CR>
+"Rust"
+let g:syntastic_rust_checkers = []
+let g:rust_fold = 1
+" Unicode chars unsupported in WSL (yet)
+"let g:rust_conceal = 1
+"let g:rust_conceal_mod_path = 1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"        						     VIM UI         					       "
+"                                   VIM UI                                     "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable autoread when file is changed externally (after 1s normal m inactivity)
 set autoread
@@ -233,7 +260,7 @@ let mapleader=" "
 colorscheme noctu
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"        						    MAPPINGS         					       "
+"                                   MAPPINGS                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Move to the beginning of line with Shift-B
 "nnoremap B ^
@@ -244,27 +271,6 @@ vnoremap E $
 " Delete line from the right of the cursor till the end
 nnoremap dE d$
 vnoremap dE d$
-" Delete line from the left of the cursor till the beginning
-"nnoremap dB d^
-"vnoremap dB d^
-
-" Bracket auto-completition
-inoremap ''     '
-
-inoremap ""     "
-
-inoremap ((     (
-inoremap ))     )
-inoremap ()     ()
-
-inoremap [[     [
-inoremap ]]     ]
-inoremap []     []
-
-autocmd FileType jav,java inoremap <leader> {<CR>  {<CR>}<Esc>O
-autocmd FileType c,h,cpp,hpp,cs inoremap <leader> {<CR>  <Esc>o{<CR>}<Esc>O
-inoremap {{     {
-inoremap }}     }
 
 " Delete surrounding parentheses
 nnoremap <leader>x) zdi(va(p`z
@@ -319,6 +325,8 @@ silent !touch -a ~/.vimbuffer
 vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
 " Paste from buffer
 inoremap <C-v> :r ~/.vimbuffer<CR>
+" Paste from system clip board
+noremap <silent><RightMouse> me:r !paste.exe<CR>0D`eP`e
 
 " Ctrl-d forward delete word (opposed to ctrl-w)
 inoremap <C-d> <Esc>lcaw
