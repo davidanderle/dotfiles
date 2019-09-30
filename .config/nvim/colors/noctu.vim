@@ -60,19 +60,18 @@ hi Type            ctermfg=44  cterm=bold
 hi StorageClass    ctermfg=6
 hi Typedef         ctermfg=6
 hi Structure       ctermfg=6
+hi PreProc         ctermfg=15
 hi String          ctermfg=39  cterm=bold
 hi Keyword         ctermfg=2
 hi Todo            ctermfg=15  ctermbg=NONE     cterm=bold,underline
-hi Function        ctermfg=246 cterm=bold
+hi Function        ctermfg=15  cterm=bold
 hi Identifier      ctermfg=15  cterm=bold
 hi Statement       ctermfg=215 cterm=bold
 hi Constant        ctermfg=198 cterm=bold
 hi Number          ctermfg=206
 hi Boolean         ctermfg=13
-hi Special         ctermfg=251 cterm=bold
+hi Special         ctermfg=15 cterm=bold
 hi Ignore          ctermfg=3
-hi! link Operator  Delimiter
-hi! link PreProc   Delimiter
 hi! link Error     ErrorMsg
 
 "}}}

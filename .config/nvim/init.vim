@@ -10,6 +10,8 @@ nnoremap <leader>x} mzdi{va{p`z
 nnoremap <leader>x( mzdi(va(p`z
 nnoremap <leader>x[ mzdi[va[p`z
 nnoremap <leader>x{ mzdi{va{p`z
+" Turn of comment line insertion on enter in a comment
+set formatoptions-=ro
 " map ; to : in normal mode
 nnoremap ; :
 " Map visual block from C-v to Q
@@ -223,6 +225,8 @@ set smartcase
 set wildmenu
 " Use many level of undo
 set undolevels=100
+" Set ctags file
+set tags+="../tags"
 " Turn beeping off
 set visualbell
 set noerrorbells
@@ -269,7 +273,7 @@ au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent exe
 colorscheme noctu
 " For type, #define, and enum highlighting
 autocmd BufRead,BufNewFile *.[ch] call HighlightTypes()
-function HighlightTypes()
+function! HighlightTypes()
   let fname = expand('<afile>:p:h') . '/../highlight.vim'
   if filereadable(fname)
     exe 'so ' . fname
@@ -336,6 +340,13 @@ nmap <leader>r <Plug>(coc-rename)
 nmap <leader>ac <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>qf <Plug>(coc-fix-current)
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 " Unicode chars unsupported in WSL (yet)
 "let g:rust_conceal = 1
 "let g:rust_conceal_mod_path = 1
@@ -343,7 +354,7 @@ nmap <leader>qf <Plug>(coc-fix-current)
 "                                    LATEX                                     "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType tex,bib call SetLatexOptions()
-function SetLatexOptions()
+function! SetLatexOptions()
     " Don't jump to errors after calling :make. Also, save the file before make
     nnoremap <leader>m :wa! \| :make!"
     " For some reason this is set even in other filetypes (when .tex are also open)
