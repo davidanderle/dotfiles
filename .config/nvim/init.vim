@@ -36,7 +36,7 @@ vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe
 " Paste from buffer
 inoremap <C-v> :r ~/.vimbuffer<CR>
 " Paste from system clip board
-noremap <silent><RightMouse> me:r !paste.exe<CR>0D`eP`e
+noremap <silent><RightMouse> me :r!paste.exe<CR> 0D `epme j_dd `e
 " Ctrl-d forward delete word (opposed to ctrl-w)
 inoremap <C-d> <Esc>lde
 " Name tmux window to the open file's name
