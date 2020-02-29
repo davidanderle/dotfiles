@@ -1,3 +1,7 @@
+"TODO: Add statusline with current music, time, date, keyboard layout
+"TODO: Add current function to statusline using coc
+"TODO: Consider using Windows Universal Volume Control API to extract music info
+"      to vim directly. Also, migrate from tmux to vim completely
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   MAPPINGS                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -10,8 +14,6 @@ nnoremap <leader>x} mzdi{va{p`z
 nnoremap <leader>x( mzdi(va(p`z
 nnoremap <leader>x[ mzdi[va[p`z
 nnoremap <leader>x{ mzdi{va{p`z
-" Turn of comment line insertion on enter in a comment
-set formatoptions-=ro
 " map ; to : in normal mode
 nnoremap ; :
 " Map visual block from C-v to Q
@@ -36,9 +38,9 @@ vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe
 " Paste from buffer
 inoremap <C-v> :r ~/.vimbuffer<CR>
 " Paste from system clip board
-noremap <silent><RightMouse> me:r !paste.exe<CR>0D`eP`e
+noremap <silent><RightMouse> me :r!paste.exe<CR> 0D `epme j_dd `e
 " Ctrl-d forward delete word (opposed to ctrl-w)
-inoremap <C-d> <Esc>lde
+inoremap <C-d> <Esc>ldei
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
@@ -142,16 +144,14 @@ Plug 'justinmk/vim-sneak'
 Plug 'itchyny/vim-cursorword'
 " Text autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Semantic highlighting 
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 " Peek into the contents of copy-paste-record buffers i<C-r>, n", n@ to peek
 Plug 'junegunn/vim-peekaboo'
-" Error and warning marking from quickfix
-Plug 'mh21/errormarker.vim'
 " Multiple cursors
 Plug 'terryma/vim-multiple-cursors'
 " Name split tabs
 Plug 'kcsongor/vim-tabbar'
-" Replace
-Plug 'dkprice/vim-easygrep'
 " LaTeX
 Plug 'lervag/vimtex'
 " Debugging
@@ -271,14 +271,7 @@ syntax on
 au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent execute "!chmod a+x <afile>" | endif | endif
 " Set coloscheme to ~/.config/nvim/colors/noctu.vim
 colorscheme noctu
-" For type, #define, and enum highlighting
-autocmd BufRead,BufNewFile *.[ch] call HighlightTypes()
-function! HighlightTypes()
-  let fname = expand('<afile>:p:h') . '/../highlight.vim'
-  if filereadable(fname)
-    exe 'so ' . fname
-  endif
-endfunction
+autocmd FileType json syntax match Comment +\/\/.\+$+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                PLUGIN CONFIGS                                "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -369,4 +362,6 @@ function! SetLatexOptions()
     " Turn on spellcheck in Latex documents
     setlocal spell!
 endfunction
+" Turn of comment line insertion on enter in a comment
+set formatoptions-=ro
 
