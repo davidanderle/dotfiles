@@ -44,7 +44,6 @@ hi DiffText            ctermfg=0     ctermbg=11    cterm=bold
 hi ModeMsg             ctermfg=39    ctermbg=NONE
 hi MsgArea             ctermfg=39    ctermbg=NONE
 hi MoreMsg             ctermfg=39    ctermbg=NONE
-hi! link CursorColumn  CursorLine
 hi! link SignColumn    LineNr
 hi! link WildMenu      Visual
 hi! link FoldColumn    SignColumn
@@ -69,7 +68,7 @@ hi Identifier      ctermfg=15  cterm=bold
 hi Statement       ctermfg=215 cterm=bold
 hi Constant        ctermfg=198 cterm=bold
 hi Number          ctermfg=206
-hi Boolean         ctermfg=13
+hi Boolean         ctermfg=13  cterm=bold
 hi Special         ctermfg=15 cterm=bold
 hi Ignore          ctermfg=3
 hi! link Error     ErrorMsg
