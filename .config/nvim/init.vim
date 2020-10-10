@@ -8,12 +8,14 @@
 " VIM key leader is set space (must be set first)
 let mapleader=" "
 " Delete surrounding parentheses
-nnoremap <leader>x) zdi(va(p`z
-nnoremap <leader>x] mzdi[va[p`z
-nnoremap <leader>x} mzdi{va{p`z
-nnoremap <leader>x( mzdi(va(p`z
-nnoremap <leader>x[ mzdi[va[p`z
-nnoremap <leader>x{ mzdi{va{p`z
+nnoremap <leader>ds) di(vhp
+nnoremap <leader>ds] di[vhp
+nnoremap <leader>ds} di}vhp
+nnoremap <leader>ds( di(vhp
+nnoremap <leader>ds[ di[vhp
+nnoremap <leader>ds{ di{vhp
+nnoremap <leader>ds' di'vhp
+nnoremap <leader>ds" di"vhp
 " map ; to : in normal mode
 nnoremap ; :
 " Map visual block from C-v to Q
@@ -31,21 +33,17 @@ cmap <c-space> \_W\+
 " Map tab and s-tab to indent and unindent, resp
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" Create vimbuffer file if doesn't exist
-silent !touch -a ~/.vimbuffer
-" Copy between vims copy to buffer
-vnoremap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
-" Paste from buffer
-inoremap <C-v> :r ~/.vimbuffer<CR>
-" Paste from system clip board
-noremap <silent><RightMouse> me :r!paste.exe<CR> 0D `epme j_dd `e
+" Copy yanked text to system clipboard
+autocmd TextYankPost * call system('echo '.shellescape(join(v:event.regcontents, "\<CR>")).' | clip.exe')
+" Paste from system clipboard
+noremap <silent><RightMouse> :let @9 = trim(system("paste.exe")) \| normal "9p <CR>
 " Ctrl-d forward delete word (opposed to ctrl-w)
 inoremap <C-d> <Esc>ldei
 " Name tmux window to the open file's name
 autocmd BufEnter * let &titlestring = '' . expand("%:t")
 autocmd VimLeave * call system("tmux rename-window bash")
 " Search for word under cursor and replace with given text <leader>r rWord
-nnoremap <leader>r :Replace <C-r><C-w> 
+nnoremap <leader>r :Replace <C-r><C-w>
 " Map space-w to close current vim tab
 nnoremap <leader>w :tabclose<CR>
 " Map space-t to new tab
@@ -209,7 +207,9 @@ set showcmd
 " Enable ruler status line and show totalLine/currentLine, column, page%
 set ruler
 set rulerformat=%2v:%l/%L\ %3p%%
-"Disable 'upper' status bar in nvim.
+" Don't update screen during macro and script execution
+set lazyredraw
+" Disable 'upper' status bar in nvim.
 set laststatus=0
 set diffopt+=vertical
 " Set to auto read when a file is changed from outside
@@ -296,6 +296,7 @@ let g:EasyGrepInvertWholeWord = 1
 map <silent><leader>gw <plug>EgMapGrepCurrentWord_v
 " Vimtex
 let g:vimtex_compiler_enabled = 0
+let g:tex_flavor = 'latex'
 " Conque-GDB
 let g:ConqueGdb_GdbExe = 'arm-none-eabi-gdb'
 let g:ConqueGdb_Leader = ','
@@ -363,5 +364,5 @@ function! SetLatexOptions()
     setlocal spell!
 endfunction
 " Turn of comment line insertion on enter in a comment
-set formatoptions-=ro
+set formatoptions-=o formatoptions-=r
 
