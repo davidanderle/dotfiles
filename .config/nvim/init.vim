@@ -254,6 +254,9 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
+" Turn of comment line insertion on enter in a comment
+set formatoptions-=o
+set formatoptions-=r
 " Highlight the 80 char column
 set colorcolumn=80
 " Enable folding (hide lines)
@@ -363,6 +366,4 @@ function! SetLatexOptions()
     " Turn on spellcheck in Latex documents
     setlocal spell!
 endfunction
-" Turn of comment line insertion on enter in a comment
-set formatoptions-=o formatoptions-=r
 
